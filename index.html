@@ -819,7 +819,7 @@ function abrirBinance() {
 // 1. Nueva función para buscar datos reales
 async function obtenerProductosShopify() {
     try {
-        const respuesta = await fetch('https://app.dropipanas.com/api/products');
+        const respuesta = await fetch('https://tu-proyecto.vercel.app/api/products');
         const productos = await respuesta.json();
         return productos;
     } catch (error) {
