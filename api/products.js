@@ -1,67 +1,36 @@
 export default async function handler(req, res) {
-    const // URL de acceso libre (sin credenciales)
-const urlPrueba = "https://api.mercadolibre.com/sites/MLV/search?q=relojes&limit=5";
-
-fetch(urlPrueba)
-  .then(response => response.json())
-  .then(data => {
-    console.log("Aquí están tus productos de prueba:", data.results);
-  })
-  .catch(error => console.error("Error:", error));
-    
-
-    // 1. Verificación de seguridad: ¿Vercel está leyendo la variable?
-    if (!token) {
-        return res.status(500).json({ error: "Falta la variable SHOPIFY_TOKEN en Vercel" });
-    }
+    // 1. Configuramos la URL de Mercado Libre Venezuela
+    // Puedes cambiar "relojes" por lo que quieras probar
+    const urlML = "https://api.mercadolibre.com/sites/MLV/search?q=relojes&limit=10";
 
     try {
-        const respuesta = await fetch(`https://${tienda}/api/2024-01/graphql.json`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Storefront-Access-Token': token,
-            },
-            body: JSON.stringify({
-                query: `{
-                    products(first: 10) {
-                        edges {
-                            node {
-                                handle
-                                title
-                                images(first: 1) { edges { node { url } } }
-                                variants(first: 1) { edges { node { price { amount } } } }
-                            }
-                        }
-                    }
-                }`
-            })
-        });
-
+        const respuesta = await fetch(urlML);
         const datos = await respuesta.json();
 
-        // 2. Revisar si Shopify devolvió errores internos (como token inválido)
-        if (datos.errors) {
-            console.error("Errores de Shopify:", datos.errors);
-            return res.status(401).json({ error: "Token de Shopify inválido o sin permisos", detalles: datos.errors });
-        }
-
-        // 3. Mapeo seguro: Evita que el código rompa si un producto no tiene imagen o precio
-        const productos = datos.data.products.edges.map(p => ({
-            title: p.node.title || "Sin título",
-            handle: p.node.handle,
-            image: { src: p.node.images.edges[0]?.node.url || "https://via.placeholder.com/150" },
-            variants: [{ price: p.node.variants.edges[0]?.node.price.amount || "0.00" }]
+        // 2. IMPORTANTE: Mapeamos los datos de ML para que tengan 
+        // la misma estructura que esperaba tu código de Shopify.
+        // Así no tienes que cambiar casi nada en tu frontend.
+        const productosMapeados = datos.results.map(prod => ({
+            title: prod.title,
+            handle: prod.id, // Usamos el ID como handle temporal
+            image: { 
+                // Mejoramos la calidad de la imagen de una vez
+                src: prod.thumbnail.replace("-I.jpg", "-W.jpg") 
+            },
+            variants: [{ 
+                price: prod.price.toString() // Lo pasamos a string como Shopify
+            }],
+            permalink: prod.permalink // Guardamos el link real de ML por si acaso
         }));
 
-        res.status(200).json(productos);
+        // 3. Enviamos la respuesta exitosa
+        res.status(200).json(productosMapeados);
 
     } catch (error) {
-        // 4. Esto imprimirá el error real en los Logs de Vercel
-        console.error("Error en la función API:", error);
+        console.error("Error en la prueba de ML:", error);
         res.status(500).json({ 
-            error: "Error interno del servidor", 
+            error: "Error al obtener productos de prueba", 
             mensaje: error.message 
         });
     }
-                      }
+}
