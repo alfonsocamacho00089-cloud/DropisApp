@@ -817,15 +817,21 @@ function abrirBinance() {
     }, 2000);
 }
 // 1. Nueva función para buscar datos reales
-async function obtenerProductosML() {
+async function obtenerProductosShopify() {
     try {
-        // Buscamos "relojes" en Mercado Libre Venezuela (MLV)
+        // Borraste la URL de acode-respaldo y pusiste esta:
         const respuesta = await fetch('https://api.mercadolibre.com/sites/MLV/search?q=relojes&limit=10');
         const datos = await respuesta.json();
-        // ML devuelve los productos dentro de "results"
-        return datos.results; 
+        
+        // Convertimos los datos de ML al formato que tu código ya usa (Shopify style)
+        return datos.results.map(prod => ({
+            title: prod.title,
+            handle: prod.id,
+            image: { src: prod.thumbnail.replace("-I.jpg", "-W.jpg") },
+            variants: [{ price: prod.price }]
+        }));
     } catch (error) {
-        console.error("Error cargando productos de ML:", error);
+        console.error("Error cargando productos de prueba:", error);
         return []; 
     }
 }
@@ -835,29 +841,24 @@ async function cargarShopping() {
     const contenedor = document.getElementById('lista-productos');
     if (!contenedor) return;
 
-    // Tu lógica de tasas que ya tienes (BCV, P2P, etc.)
     const tasaActual = (tasaSeleccionada === 'bcv') ? tApi.bcv : (tasaSeleccionada === 'euro' ? tApi.euro : tApi.p2p);
     const p2pReal = tasaActual || 40.00;
 
-    // Llamamos a la nueva función de ML
-    const productos = await obtenerProductosML();
+    const productos = await obtenerProductosShopify();
     
     contenedor.innerHTML = ""; 
     productos.forEach(prod => {
-        // CAMBIOS AQUÍ: ML usa 'price', 'thumbnail' y 'permalink'
-        const precioUSD = parseFloat(prod.price);
+        const precioUSD = parseFloat(prod.variants[0].price);
         const precioBS = (precioUSD * p2pReal).toLocaleString("es-VE", {minimumFractionDigits: 2});
-        
-        // Mejoramos la calidad de la imagen de ML (de miniatura a normal)
-        const imagen = prod.thumbnail.replace("-I.jpg", "-W.jpg");
+        const imagen = prod.image ? prod.image.src : "https://via.placeholder.com/300";
 
         contenedor.innerHTML += `
-            <div style="background: #222; border-radius: 18px; padding: 10px; text-align: center; border: 1px solid #333;">
+            <div style="background: #222; border-radius: 18px; padding: 10px; text-align: center; border: 1px solid #333; margin-bottom: 10px;">
                 <img src="${imagen}" style="width: 100%; border-radius: 12px; margin-bottom: 8px;">
                 <h4 style="font-size: 0.8em; color: #eee; margin-bottom: 5px;">${prod.title}</h4>
                 <p style="color: #ffd700; font-weight: bold; font-size: 0.9em;">Bs. ${precioBS}</p>
                 <p style="color: #888; font-size: 0.7em; margin-bottom: 8px;">($${precioUSD.toFixed(2)})</p>
-                <a href="${prod.permalink}" target="_blank" style="display: block; background: #6b8e23; color: white; text-decoration: none; padding: 8px; border-radius: 8px; font-size: 0.75em; font-weight: bold;">VER PRODUCTO</a>
+                <a href="https://articulo.mercadolibre.com.ve/${prod.handle}" target="_blank" style="display: block; background: #6b8e23; color: white; text-decoration: none; padding: 8px; border-radius: 8px; font-size: 0.75em; font-weight: bold;">VER EN TIENDA</a>
             </div>`;
     });
 }
