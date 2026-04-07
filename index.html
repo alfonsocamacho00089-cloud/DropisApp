@@ -820,7 +820,7 @@ function abrirBinance() {
 async function obtenerProductosShopify() {
     try {
         // Borraste la URL de acode-respaldo y pusiste esta:
-        const respuesta = await fetch('https://api.mercadolibre.com/sites/MLV/search?q=relojes&limit=10');
+        const respuesta = await fetch ('https://api.mercadolibre.com/sites/MLV/search?q=relojes&limit=10');
         const datos = await respuesta.json();
         
         // Convertimos los datos de ML al formato que tu código ya usa (Shopify style)
