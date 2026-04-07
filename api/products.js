@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    const tienda = "mitiendat4dns0-ds.myshopify.com";
+    const tienda = "t4dns0-ds.myshopify.com";
     const token = process.env.SHOPIFY_TOKEN;
 
     // 1. Verificación de seguridad: ¿Vercel está leyendo la variable?
