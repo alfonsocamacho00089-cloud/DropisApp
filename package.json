@@ -1,0 +1,7 @@
+{
+  "name": "tupropina-api",
+  "version": "1.0.0",
+  "description": "API para Shopify en Vercel",
+  "main": "api/products.js",
+  "license": "MIT"
+}
