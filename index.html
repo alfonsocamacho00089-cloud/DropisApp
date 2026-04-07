@@ -817,14 +817,15 @@ function abrirBinance() {
     }, 2000);
 }
 // 1. Nueva función para buscar datos reales
-async function obtenerProductosShopify() {
+async function obtenerProductosML() {
     try {
-        // CAMBIA ESTA LÍNEA: Agrega /api/products al final
-        const respuesta = await fetch('https://acode-respaldo.vercel.app/api/products');
-        const productos = await respuesta.json();
-        return productos;
+        // Buscamos "relojes" en Mercado Libre Venezuela (MLV)
+        const respuesta = await fetch('https://api.mercadolibre.com/sites/MLV/search?q=relojes&limit=10');
+        const datos = await respuesta.json();
+        // ML devuelve los productos dentro de "results"
+        return datos.results; 
     } catch (error) {
-        console.error("Error cargando productos de Shopify:", error);
+        console.error("Error cargando productos de ML:", error);
         return []; 
     }
 }
@@ -832,18 +833,23 @@ async function obtenerProductosShopify() {
 // 2. Nueva función para mostrar los productos en pantalla
 async function cargarShopping() {
     const contenedor = document.getElementById('lista-productos');
-    if (!contenedor) return; // Seguridad por si el ID no existe
+    if (!contenedor) return;
 
+    // Tu lógica de tasas que ya tienes (BCV, P2P, etc.)
     const tasaActual = (tasaSeleccionada === 'bcv') ? tApi.bcv : (tasaSeleccionada === 'euro' ? tApi.euro : tApi.p2p);
     const p2pReal = tasaActual || 40.00;
 
-    const productos = await obtenerProductosShopify();
+    // Llamamos a la nueva función de ML
+    const productos = await obtenerProductosML();
     
     contenedor.innerHTML = ""; 
     productos.forEach(prod => {
-        const precioUSD = parseFloat(prod.variants[0].price);
+        // CAMBIOS AQUÍ: ML usa 'price', 'thumbnail' y 'permalink'
+        const precioUSD = parseFloat(prod.price);
         const precioBS = (precioUSD * p2pReal).toLocaleString("es-VE", {minimumFractionDigits: 2});
-        const imagen = prod.image ? prod.image.src : "https://via.placeholder.com/300";
+        
+        // Mejoramos la calidad de la imagen de ML (de miniatura a normal)
+        const imagen = prod.thumbnail.replace("-I.jpg", "-W.jpg");
 
         contenedor.innerHTML += `
             <div style="background: #222; border-radius: 18px; padding: 10px; text-align: center; border: 1px solid #333;">
@@ -851,7 +857,7 @@ async function cargarShopping() {
                 <h4 style="font-size: 0.8em; color: #eee; margin-bottom: 5px;">${prod.title}</h4>
                 <p style="color: #ffd700; font-weight: bold; font-size: 0.9em;">Bs. ${precioBS}</p>
                 <p style="color: #888; font-size: 0.7em; margin-bottom: 8px;">($${precioUSD.toFixed(2)})</p>
-                <a href="https://837u5x-me.myshopify.com/products/${prod.handle}" target="_blank" style="display: block; background: #6b8e23; color: white; text-decoration: none; padding: 8px; border-radius: 8px; font-size: 0.75em; font-weight: bold;">VER EN TIENDA</a>
+                <a href="${prod.permalink}" target="_blank" style="display: block; background: #6b8e23; color: white; text-decoration: none; padding: 8px; border-radius: 8px; font-size: 0.75em; font-weight: bold;">VER PRODUCTO</a>
             </div>`;
     });
 }
