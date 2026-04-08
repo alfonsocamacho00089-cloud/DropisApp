@@ -963,13 +963,23 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
       if (permission === 'granted') {
 
         console.log('Notificaciones activadas.');
-
+        
+        // AQUÍ AGREGAS EL BLOQUE DEL TOKEN
+        getToken(messaging, { vapidKey: 'TU_CLAVE_VAPID_DE_LA_CONSOLA' })
+          .then((currentToken) => {
+            if (currentToken) {
+              console.log('Tu Token es:', currentToken);
+              // IMPORTANTE: Copia este token de la consola para probarlo 
+              // en "Cloud Messaging" de Firebase.
+            } else {
+              console.log('No se pudo generar el token. Revisa los permisos.');
+            }
+          })
+          .catch((err) => {
+            console.error('Error al obtener el token:', err);
+          });
       }
-
     });
-
-  }
-
 
 
 </script>
