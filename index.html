@@ -957,17 +957,27 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
   // Esto pide permiso sin detener el resto de la página
 
 if ('Notification' in window) {
+  Notification.requestPermission().then((permission) => {
+    
+    // El aviso de "Desea recibir notificaciones" sale gracias a la línea de arriba
+    if (permission === 'granted') {
+      console.log('Notificaciones activadas.');
 
-Notification.requestPermission().then((permission) => {
+      // EL CÓDIGO DEL TOKEN DEBE IR AQUÍ ADENTRO
+      getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU' })
+        .then((token) => {
+          if (token) {
+            alert("TOKEN: " + token);
+          } else {
+            alert("No hay token disponible");
+          }
+        })
+        .catch((err) => {
+          alert("ERROR AL OBTENER TOKEN: " + err);
+        });
+    }
 
-if (permission === 'granted') {
-
-console.log('Notificaciones activadas.');
-
-}
-
-});
-
+  });
 }
 </script>
 
