@@ -956,18 +956,19 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 
   // Esto pide permiso sin detener el resto de la página
 
-  if ('Notification' in window) {
+if ('Notification' in window) {
 
-    Notification.requestPermission().then((permission) => {
+Notification.requestPermission().then((permission) => {
 
-      
-      
-    
-    
-      
-    });
+if (permission === 'granted') {
+
+console.log('Notificaciones activadas.');
+
 }
-    }
+
+});
+
+}
 </script>
 
 
