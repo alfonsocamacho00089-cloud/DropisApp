@@ -3,12 +3,12 @@ importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compa
 
 // PEGA AQUÍ TUS MISMOS DATOS DE CONFIGURACIÓN
 firebase.initializeApp({
-  apiKey: "TU_API_KEY_AQUÍ",
+  apiKey: "AIzaSyCaUyhX2iBMl4A5xeKeu_4SeE6HClp4V1s",
   authDomain: "real-market-elite-2025.firebaseapp.com",
   projectId: "real-market-elite-2025",
   storageBucket: "real-market-elite-2025.appspot.com",
-  messagingSenderId: "TU_SENDER_ID_AQUÍ",
-  appId: "TU_APP_ID_AQUÍ"
+  messagingSenderId: "226489002778",
+  appId: "1:226489002778:web:6722d21a9e78b33b5b1aa3"
 });
 
 const messaging = firebase.messaging();
