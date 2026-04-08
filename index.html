@@ -928,8 +928,7 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
 
-  import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js";
-
+  import { onMessage } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js";
 
 
   const firebaseConfig = {
@@ -965,20 +964,22 @@ if ('Notification' in window) {
 
       // EL CÓDIGO DEL TOKEN DEBE IR AQUÍ ADENTRO
       getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU' })
-        .then((token) => {
-          if (token) {
-            alert("TOKEN: " + token);
-          } else {
-            navigator.clipboard.writeText(token).then(() => { alert("¡Copiado! Pégalo en tu bloc de notas"); });
-          }
-        })
-        .catch((err) => {
-          alert("ERROR AL OBTENER TOKEN: " + err);
-        });
+  .then((token) => {
+    if (token) {
+      // Esto hace las dos cosas: lo muestra y lo copia
+      alert("TOKEN: " + token);
+      navigator.clipboard.writeText(token); 
+    } else {
+      console.log('No hay token disponible.');
     }
-
+  })
+  .catch((err) => {
+    console.log('Error al obtener token:', err);
   });
+    }
+  })
 }
+    
 </script>
 
 
