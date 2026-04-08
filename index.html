@@ -944,12 +944,18 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 if ('Notification' in window) {
     Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
-            getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU' })
-                .then((token) => console.log("Token generado:", token))
-                .catch((err) => console.log("Error al obtener token:", err));
+    console.log('Notificaciones activadas');
+
+    // AQUÍ ESdonde haces el cambio:
+    getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU'})
+        .then((token) => {
+            confirm("Copia este token: " + token); 
+            console.log("Token:", token);
+        })
+        .catch((err) => {
+            console.log('Error al obtener el token:', err);
+        });
         }
-    });
-}
 
 </script>
 
