@@ -960,19 +960,14 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 
     Notification.requestPermission().then((permission) => {
 
-      if (permission === 'granted') {
-  getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU' })
-    .then((token) => {
-      if (token) {
-        alert("TOKEN: " + token);
-      } else {
-        alert("No hay token disponible");
+      
       }
     })
     .catch((err) => {
       alert("ERROR: " + err);
     });
 }
+    
 </script>
 
 
