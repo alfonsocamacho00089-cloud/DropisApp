@@ -927,39 +927,62 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+
   import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js";
 
+
+
   const firebaseConfig = {
-    apiKey: "AIzaSyCaUyhX2iBMl4A5xeKeu_4SeE6HClp4V1s",
+
+    apiKey: "TU_API_KEY_AQUÍ",
+
     authDomain: "real-market-elite-2025.firebaseapp.com",
+
     projectId: "real-market-elite-2025",
+
     storageBucket: "real-market-elite-2025.appspot.com",
+
     messagingSenderId: "226489002778",
+
     appId: "1:226489002778:web:6722d21a9e78b33b5b1aa3"
+
   };
+
   const app = initializeApp(firebaseConfig);
+
   const messaging = getMessaging(app);
 
-  // Reemplaza tus líneas 944 a 950 por esto:
-if ('Notification' in window) {
-    Notification.requestPermission().then((permission) => {
-        if (permission === 'granted') {
-    console.log('Notificaciones activadas');
 
-    // AQUÍ ESdonde haces el cambio:
-    getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU'})
-        .then((token) => {
-            confirm("Copia este token: " + token); 
-            console.log("Token:", token);
-        })
-        .catch((err) => {
-            console.log('Error al obtener el token:', err);
-        });
-        }
+
+  // Esto pide permiso sin detener el resto de la página
+
+  if ('Notification' in window) {
+
+    Notification.requestPermission().then((permission) => {
+
+      if (permission === 'granted') {
+
+        console.log('Notificaciones activadas.');
+
+      }
+
+    });
+
+  }
+
+
 
 </script>
 
+
+
 </body>
 
+
+
   </html>
-  
+
+
+
+
+
