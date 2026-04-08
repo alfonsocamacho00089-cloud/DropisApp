@@ -11,8 +11,8 @@ firebase.initializeApp({
   appId: "1:226489002778:web:6722d21a9e78b33b5b1aa3"
 });
 
-const messaging = firebase.messaging();
-
+const messaging = getMessaging(app); 
+// Se importan funciones sueltas como "getMessaging"
 // Este código muestra la notificación cuando llega
 messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
