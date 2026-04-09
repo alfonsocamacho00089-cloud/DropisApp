@@ -973,7 +973,24 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 
 
   const messaging = getMessaging(app);
+onMessage(messaging, (payload) => {
+  console.log('¡Mensaje recibido en vivo!', payload);
+  
+  // 1. Localizamos el botón o pestaña de "REVISAR" en tu HTML
+  // Asegúrate de que en tu HTML, esa pestaña tenga id="tab-revisar" o cámbialo aquí
+  const pestañaRevisar = document.querySelector('[data-tab="REVISAR"]') || document.getElementById('tab-revisar');
 
+  if (pestañaRevisar) {
+      // 2. Le damos un efecto visual (opcional)
+      pestañaRevisar.style.backgroundColor = "#ffcc00"; 
+      
+      // 3. Simulamos un click para que la app cambie de pestaña automáticamente
+      pestañaRevisar.click(); 
+  }
+  
+  // 4. Mostramos el aviso visual
+  alert("Prueba Exitosa: " + payload.notification.body);
+});
   // Esto pide permiso sin detener el resto de la página
 
 
