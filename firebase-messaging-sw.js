@@ -32,7 +32,7 @@ const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
 
-  const notificationTitle = payload.notification.title;
+  const notificationTitle = payload.notification.title || "TuPropina Aviso";
 
   const notificationOptions = {
 
