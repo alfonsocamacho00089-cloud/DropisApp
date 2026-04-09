@@ -926,162 +926,58 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 </script>
 
 <script type="module">
-
-
-
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-
-
-
   import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js";
 
-
   const firebaseConfig = {
-
-
-
     apiKey: "AIzaSyCaUyhX2iBMl4A5xeKeu_4SeE6HClp4V1s",
-
-
-
     authDomain: "real-market-elite-2025.firebaseapp.com",
-
-
-
     projectId: "real-market-elite-2025",
-
-
-
     storageBucket: "real-market-elite-2025.appspot.com",
-
-
-
     messagingSenderId: "226489002778",
-
-
-
     appId: "1:226489002778:web:6722d21a9e78b33b5b1aa3"
-
-
-
   };
 
-
-
   const app = initializeApp(firebaseConfig);
-
-
-
   const messaging = getMessaging(app);
-onMessage(messaging, (payload) => {
-  console.log('¡Mensaje recibido en vivo!', payload);
-  
-  // 1. Localizamos el botón o pestaña de "REVISAR" en tu HTML
-  // Asegúrate de que en tu HTML, esa pestaña tenga id="tab-revisar" o cámbialo aquí
-  const pestañaRevisar = document.querySelector('[data-tab="REVISAR"]') || document.getElementById('tab-revisar');
 
-  if (pestañaRevisar) {
-      // 2. Le damos un efecto visual (opcional)
-      pestañaRevisar.style.backgroundColor = "#ffcc00"; 
-      
-      // 3. Simulamos un click para que la app cambie de pestaña automáticamente
-      pestañaRevisar.click(); 
+  // Mensajes cuando la app está abierta (Primer plano)
+  onMessage(messaging, (payload) => {
+    console.log('¡Mensaje recibido en vivo!', payload);
+    const pestañaRevisar = document.querySelector('[data-tab="REVISAR"]') || document.getElementById('tab-revisar');
+    if (pestañaRevisar) {
+        pestañaRevisar.style.backgroundColor = "#ffcc00"; 
+        pestañaRevisar.click(); 
+    }
+    alert("Prueba Exitosa: " + (payload.notification?.body || "Nuevo mensaje"));
+  });
+
+  // Registro y obtención de Token
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./firebase-messaging-sw.js')
+      .then((registration) => {
+        console.log('Service Worker registrado con éxito');
+        
+        return Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            return getToken(messaging, { 
+              vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU',
+              serviceWorkerRegistration: registration // Vinculamos el SW registrado
+            });
+          }
+        });
+      })
+      .then((token) => {
+        if (token) {
+          console.log("Token obtenido:", token);
+          // Opcional: Mostrarlo para copiarlo fácilmente
+          // prompt("Copia tu token:", token);
+        }
+      })
+      .catch((err) => {
+        console.error("Error en el flujo de notificaciones:", err);
+      });
   }
-  
-  // 4. Mostramos el aviso visual
-  alert("Prueba Exitosa: " + payload.notification.body);
-});
-  // Esto pide permiso sin detener el resto de la página
-
-
-
-if ('Notification' in window) {
-
-
-
-Notification.requestPermission().then((permission) => {
-
-
-
-    // El aviso de "Desea recibir notificaciones" sale gracias a la línea de arriba
-
-
-
-    if (permission === 'granted') {
-
-  console.log('Notificaciones activadas.');
-
-
-
-  // ESTA ES LA LÍNEA QUE FALTA PARA DEFINIR EL REGISTRO
-
-  navigator.serviceWorker.register('./firebase-messaging-sw.js')
-
-    // Ahora sí, usamos "registration" aquí adentro
-
-    getToken(messaging, { vapidKey: 'BIrsA9YbBXfIuo4PTMrKRtuktRsK2RbK0XevupuofGGOUDy9w5VZ9yaXbZXsenXppmFsR62-2B7jBOG0Z8RdxvU' })
-
-
-
-.then((token) => {
-
-
-
-if (token) {
-
-
-
-alert("TOKEN: " + token);
-
-
-
-} else {
-
-
-
-navigator.clipboard.writeText(token).then(() => { alert("¡Copiado! Pégalo en tu bloc de notas"); });
-
-
-
-}
-
-
-
-})
-
-
-
-.catch((err) => {
-
-
-
-alert("ERROR AL OBTENER TOKEN: " + err);
-
-
-
-});
-
-
-
-}
-
-
-
-});
-
-
-
-}
-
-
-
 </script>
-
-
-
 </body>
-
-
-
-  </html>
-
+</html>
