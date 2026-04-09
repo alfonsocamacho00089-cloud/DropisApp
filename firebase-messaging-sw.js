@@ -17,11 +17,11 @@ messaging.onBackgroundMessage((payload) => {
 
   const notificationTitle = payload.notification?.title || "DropisChat";
   const notificationOptions = {
-    body: payload.notification?.body || "Tienes un nuevo mensaje",
-    icon: '/logo.png', // Asegúrate de que esta ruta sea válida
-    badge: '/badge.png',
-    tag: 'new-message',
-    renotify: true
+    body: payload.notification?.body || "Nueva actualización disponible",
+    icon: './logo.png',  
+    badge: './badge.png',
+    vibrate: [200, 100, 200]
+tag: 'confirmacion-tasa'  // Opcional: evita que se amontonen las notificaciones
   };
 
   return self.registration.showNotification(notificationTitle, notificationOptions);
