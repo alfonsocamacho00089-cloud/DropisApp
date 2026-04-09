@@ -983,27 +983,52 @@ document.querySelectorAll('input').forEach(i => i.addEventListener('input', actu
 <script src="js/registro.js"></script>
 <script src="js/qr-generator.js"></script>
 
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/registro.js"></script>
+<script src="js/qr-generator.js"></script>
+
 <script>
     // Funciones para controlar el Modal
     function abrirModalQR() {
-        const modal = document.getElementById('modal-qr');
-        if (modal) {
-            modal.style.display = 'flex';
-            // Como el usuario es Pedro Peres
-            if(typeof inicializarPedro === "function") {
-                inicializarPedro();
-            } else if (typeof crearCuentaMaestra === "function") {
-                crearCuentaMaestra('Pedro Peres').then(id => {
-                    if(typeof mostrarMiQR === "function") mostrarMiQR(id);
-                });
-            }
+    const modal = document.getElementById('modal-qr');
+    if (modal) {
+        modal.style.display = 'flex';
+        // Llamamos directamente a la creación de la cuenta para Pedro
+        if (typeof crearCuentaMaestra === "function") {
+            crearCuentaMaestra('Pedro Peres').then(id => {
+                if (typeof mostrarMiQR === "function") {
+                    mostrarMiQR(id);
+                }
+            });
+        } else {
+            console.error("No se encontró la función crearCuentaMaestra en registro.js");
         }
     }
-
+}
     function cerrarModalQR() {
         const modal = document.getElementById('modal-qr');
         if (modal) modal.style.display = 'none';
     }
+    
+</script>
+
+    <div id="modal-qr" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+    <div style="background: #fff; padding: 20px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; position: relative;">
+        <button onclick="cerrarModalQR()" style="position: absolute; top: 10px; right: 10px; background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+        <h3 style="color: #333; margin-bottom: 15px;">Mi Identidad Dropis</h3>
+        
+        <div id="contenedor-qr">
+            <p style="color: #666;">Generando tu código...</p>
+        </div>
+
+        <button onclick="cerrarModalQR()" style="margin-top: 20px; width: 100%; padding: 10px; background: #6b8e23; color: white; border: none; border-radius: 10px; font-weight: bold;">CERRAR</button>
+    </div>
+</div>
+
 </script>
 
 </body>
