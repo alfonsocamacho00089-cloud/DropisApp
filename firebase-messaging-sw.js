@@ -16,16 +16,23 @@ const messaging = firebase.messaging();
 
   // En tu archivo firebase-messaging-sw.js
 messaging.onBackgroundMessage((payload) => {
-  // Extraemos la información del payload que viene de Firebase
-  const notificationTitle = payload.notification.title || "DropisShop"; 
-  
+  const notificationTitle = payload.notification?.title || "DropisShop";
+
   const notificationOptions = {
-    body: payload.notification.body,
-    icon: '/logo.png', 
-    badge: '/badge.png',
-    // ESTA LÍNEA ES LA QUE FALTA:
-    image: payload.notification.image || payload.data.image || '/logo.png'
+    body: payload.notification?.body,
+    // Icono lateral (a color, transparente, 'maskable' en el manifest)
+    icon: '/logo.png',
+    // Badge de la barra de estado (blanco y transparente, cuadrado perfecto)
+    badge: '/badge.png', 
+
+    // AQUÍ ESTÁ EL TRUCO DEL TAMAÑO:
+    // Si envías una imagen cuadrada, Android la hará circular y pequeña como en tus ejemplos.
+    image: payload.data?.image_perfil || '/logo_cuadrado_perfil.png',
+
+    vibrate: [200, 100, 200],
+    tag: 'update-notification',
+    renotify: true
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  return self.registration.showNotification(notificationTitle, notificationOptions);
 });
