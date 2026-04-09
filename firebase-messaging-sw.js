@@ -16,9 +16,11 @@ messaging.onBackgroundMessage((payload) => {
   
   const notificationTitle = payload.notification?.title || "DropisShop";
   const notificationOptions = {
-    body: payload.notification?.body || "Nueva actualización disponible",
-    icon: '/logo.png',
-    badge: '/badge.png' // Opcional: icono pequeño en la barra de estado
+    body: payload.notification?.body || "Nuevo mensaje",
+    icon: './logo.png',
+    badge: './placa.png',
+    tag: 'mensaje-nuevo', // Esta línea es clave para que no use datos viejos
+    renotify: true
   };
 
   return self.registration.showNotification(notificationTitle, notificationOptions);
