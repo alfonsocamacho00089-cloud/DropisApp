@@ -21,10 +21,10 @@ messaging.onBackgroundMessage((payload) => {
   
   const notificationOptions = {
     body: payload.notification.body,
-    icon: 'logo.png', 
-    badge: 'badge.png',
+    icon: '/logo.png', 
+    badge: '/badge.png',
     // ESTA LÍNEA ES LA QUE FALTA:
-    image: payload.notification.image || payload.data.image 
+    image: payload.notification.image || payload.data.image || '/logo.png'
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
